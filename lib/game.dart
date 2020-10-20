@@ -37,7 +37,7 @@ class _GameState extends State<Game> {
     setState(() {
       isLoading = false;
     });
-    print(countryList[0].flagUrl);
+
     return countryList;
   }
 
