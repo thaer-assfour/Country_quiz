@@ -311,7 +311,8 @@ class _GameState extends State<Game> {
                         : ((answer != null && value != name)
                             ? FontWeight.w400
                             : FontWeight.w400))),
-            overflow: TextOverflow.ellipsis,
+              overflow: TextOverflow.clip,
+            softWrap: false,
           ),
         ),
       ],
