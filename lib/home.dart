@@ -47,10 +47,18 @@ class _HomeState extends State<Home> {
                         borderRadius: BorderRadius.circular(32)),
                     child: Column(
                       children: [
+                        Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Text(
+                            "Flag Competition",
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
+                        ),
                         Text(
                           "Choose number of country",
                           style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold),
+                              fontSize: 16, fontWeight: FontWeight.w500),
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -70,11 +78,11 @@ class _HomeState extends State<Home> {
                   padding: const EdgeInsets.all(16.0),
                   child: RaisedButton(padding: EdgeInsets.fromLTRB(16, 6, 16, 6),
                     onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context){return Game(selectedRadio);}));
+                    Navigator.push(context, MaterialPageRoute(builder: (context){return FlagGame(selectedRadio);}));
                     },
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),side: BorderSide(color: myColorListPrimary[0])),
-                    child: Text("Start quiz",style: TextStyle(color: myColorListPrimary[4],fontSize: 20),),elevation: 3,
+                    child: Text("Start Flag Competition",style: TextStyle(color: myColorListPrimary[4],fontSize: 20),),elevation: 3,
                     color: myColorListPrimary[1].withOpacity(0.8),
                   ),
                 )

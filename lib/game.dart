@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 
-import 'package:flag_quiz/country/country.dart';
+import 'country/country.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -10,21 +10,22 @@ import 'package:http/http.dart' as http;
 import 'colors.dart';
 
 // ignore: must_be_immutable
-class Game extends StatefulWidget {
+class FlagGame extends StatefulWidget {
   int length;
 
   @override
-  _GameState createState() => _GameState();
+  _FlagGameState createState() => _FlagGameState();
 
-  Game(this.length);
+  FlagGame(this.length);
 }
 
-class _GameState extends State<Game> {
+class _FlagGameState extends State<FlagGame> {
   List<Country> countryList;
   List<Answer> answerList = List<Answer>();
   var selectedChoices;
   int totalSuccess = 0;
   int totalFailed = 0;
+  int totalNotAnswered;
 
   var isLoading = true;
 
@@ -76,9 +77,11 @@ class _GameState extends State<Game> {
       if (answerList[index].name == val) {
         answerList[index].result = "Success";
         totalSuccess++;
+        totalNotAnswered--;
       } else {
         answerList[index].result = "Failed";
         totalFailed++;
+        totalNotAnswered--;
       }
     });
   }
@@ -87,7 +90,7 @@ class _GameState extends State<Game> {
   void initState() {
     // TODO: implement initState
     super.initState();
-
+    totalNotAnswered = widget.length;
     getCountryListData().then((value) => fillQuizList(value, answerList));
   }
 
@@ -96,7 +99,7 @@ class _GameState extends State<Game> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Country List",
+          "Country Quiz List",
           style: TextStyle(
               color: myColorListPrimary[4],
               fontWeight: FontWeight.bold,
@@ -109,9 +112,16 @@ class _GameState extends State<Game> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              "Let's Start the Competition",
+              style: TextStyle(fontSize: 24, color: myColorListPrimary[0]),
+            ),
+          ),
           Container(
-            height: MediaQuery.of(context).size.height * 0.7,
-            padding: EdgeInsets.only(top: 32, bottom: 32),
+            height: MediaQuery.of(context).size.height * 0.60,
+            padding: EdgeInsets.only(top: 32, bottom: 0),
             child: Center(
                 child: isLoading
                     ? CircularProgressIndicator()
@@ -121,84 +131,201 @@ class _GameState extends State<Game> {
                         itemBuilder: (context, index) {
                           return Container(
                             padding: const EdgeInsets.only(left: 16, right: 16),
-                            child: Card(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(24.0),
-                                  side: BorderSide(
-                                      color: myColorListPrimary[0],
-                                      width: 0.3)),
-                              color: myColorListPrimary[6],
-                              shadowColor: myColorListPrimary[0],
-                              elevation: 4,
-                              child: Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 32),
-                                    child: Row(
-                                      children: [
-                                        (answerList[index].result == "Success")
-                                            ? Text(
-                                                "Success",
-                                                style: TextStyle(
-                                                    color: Colors.lightBlue,
-                                                    fontSize: 24),
-                                              )
-                                            : ((answerList[index].result ==
-                                                    "Failed")
-                                                ? Text("Failed",
-                                                    style: TextStyle(
-                                                        color: Colors.redAccent,
-                                                        fontSize: 24))
-                                                : Text("",
-                                                    style: TextStyle(
-                                                        color: Colors.lightBlue,
-                                                        fontSize: 24)))
-                                      ],
-                                    ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        decoration: BoxDecoration(
+                                            color: myColorListPrimary[0],
+                                            borderRadius: BorderRadius.only(
+                                              topRight: Radius.circular(8.0),
+                                              topLeft: Radius.circular(8.0),
+                                            )),
+                                        padding: const EdgeInsets.only(
+                                            left: 6,
+                                            right: 6,
+                                            top: 4,
+                                            bottom: 4),
+                                        child: Text(
+                                          "  " +
+                                              (index + 1).toString() +
+                                              "   of   " +
+                                              widget.length.toString() +
+                                              "  ",
+                                          style: TextStyle(
+                                              color: myColorListPrimary[4]),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  Container(
-                                      padding:
-                                          EdgeInsets.only(left: 16, right: 16),
-                                      width: MediaQuery.of(context).size.width *
-                                          0.70,
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              0.25,
-                                      child: SvgPicture.network(
-                                        answerList[index].flagUrl,
-                                        fit: BoxFit.fill,
-                                      )),
-                                  Column(
+                                ),
+                                Card(
+                                  margin: EdgeInsets.only(
+                                      top: 0, bottom: 8, left: 0, right: 0),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.only(
+                                          bottomRight: Radius.circular(16.0),
+                                          bottomLeft: Radius.circular(16.0),
+                                          topRight: Radius.circular(16.0)),
+                                      side: BorderSide(
+                                          color: myColorListPrimary[0],
+                                          width: 0.3)),
+                                  color: myColorListPrimary[6],
+                                  shadowColor: myColorListPrimary[0],
+                                  elevation: 4,
+                                  child: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      textWithRadio(
-                                          answerList[index].choices[0],
-                                          index,
-                                          answerList[index].answer,
-                                          answerList[index].name),
-                                      textWithRadio(
-                                          answerList[index].choices[1],
-                                          index,
-                                          answerList[index].answer,
-                                          answerList[index].name),
-                                      textWithRadio(
-                                          answerList[index].choices[2],
-                                          index,
-                                          answerList[index].answer,
-                                          answerList[index].name),
-                                      textWithRadio(
-                                          answerList[index].choices[3],
-                                          index,
-                                          answerList[index].answer,
-                                          answerList[index].name),
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 32),
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                              top: 12, bottom: 8, left: 0),
+                                          child: Row(
+                                            children: [
+                                              (answerList[index].result ==
+                                                      "Success")
+                                                  ? Row(
+                                                      children: [
+                                                        CircleAvatar(
+                                                          child: Icon(
+                                                            Icons.done,
+                                                            size: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .height *
+                                                                0.015,
+                                                            color: Colors.white,
+                                                          ),
+                                                          backgroundColor:
+                                                              Colors.lightBlue,
+                                                          radius: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .height *
+                                                              0.013,
+                                                        ),
+                                                        Text(
+                                                          " Success",
+                                                          style: TextStyle(
+                                                              color: Colors
+                                                                  .lightBlue,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              fontSize: 18),
+                                                        ),
+                                                      ],
+                                                    )
+                                                  : ((answerList[index]
+                                                              .result ==
+                                                          "Failed")
+                                                      ? Row(
+                                                          children: [
+                                                            CircleAvatar(
+                                                              child: Icon(
+                                                                Icons.close,
+                                                                size: MediaQuery.of(
+                                                                            context)
+                                                                        .size
+                                                                        .height *
+                                                                    0.015,
+                                                                color: Colors
+                                                                    .white,
+                                                              ),
+                                                              backgroundColor:
+                                                                  Colors
+                                                                      .redAccent,
+                                                              radius: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .height *
+                                                                  0.013,
+                                                            ),
+                                                            Text(
+                                                              " Failed",
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .redAccent,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  fontSize: 18),
+                                                            ),
+                                                          ],
+                                                        )
+                                                      : Text(
+                                                          "Choose the correct answer :",
+                                                          style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w800,
+                                                              color:
+                                                                  myColorListPrimary[
+                                                                      0],
+                                                              fontSize: 18)))
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      Container(
+                                          padding: EdgeInsets.only(
+                                              left: 16,
+                                              right: 16,
+                                              bottom: 8,
+                                              top: 8),
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.7,
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              0.25,
+                                          child: SvgPicture.network(
+                                            answerList[index].flagUrl,
+                                            fit: BoxFit.fill,
+                                            allowDrawingOutsideViewBox: false,
+                                            width: double.infinity,
+                                            height: double.infinity,
+                                          )),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          textWithRadio(
+                                              answerList[index].choices[0],
+                                              index,
+                                              answerList[index].answer,
+                                              answerList[index].name),
+                                          textWithRadio(
+                                              answerList[index].choices[1],
+                                              index,
+                                              answerList[index].answer,
+                                              answerList[index].name),
+                                          textWithRadio(
+                                              answerList[index].choices[2],
+                                              index,
+                                              answerList[index].answer,
+                                              answerList[index].name),
+                                          textWithRadio(
+                                              answerList[index].choices[3],
+                                              index,
+                                              answerList[index].answer,
+                                              answerList[index].name),
+                                        ],
+                                      )
                                     ],
-                                  )
-                                ],
-                              ),
+                                  ),
+                                )
+                              ],
                             ),
                           );
                         })),
@@ -212,9 +339,6 @@ class _GameState extends State<Game> {
                   color: myColorListPrimary[0],
                 ),
                 borderRadius: BorderRadius.all(Radius.circular(20))),
-            //color: Colors.lightBlue.withOpacity(0.4),
-            // decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(20))),
-
             child: Column(
               children: [
                 Padding(
@@ -250,6 +374,22 @@ class _GameState extends State<Game> {
                   ),
                 ),
                 Padding(
+                  padding: const EdgeInsets.only(left: 24),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.hourglass_empty,
+                        color: Colors.orange,size: 22,
+                      ),
+                      Text(
+                        "Total Not Answered: " + totalNotAnswered.toString(),
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500, fontSize: 16),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
                   padding: const EdgeInsets.only(left: 48),
                   child: Row(
                     children: [
@@ -278,6 +418,7 @@ class _GameState extends State<Game> {
         Container(
           padding: const EdgeInsets.only(left: 16),
           child: Radio(
+            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             value: value,
             groupValue: answer,
             activeColor: myColorListPrimary[0],
@@ -311,7 +452,7 @@ class _GameState extends State<Game> {
                         : ((answer != null && value != name)
                             ? FontWeight.w400
                             : FontWeight.w400))),
-              overflow: TextOverflow.clip,
+            overflow: TextOverflow.clip,
             softWrap: false,
           ),
         ),
