@@ -61,7 +61,7 @@ class _FlagGameState extends State<FlagGame> {
         w++;
       }
 
-      choicesList.shuffle();
+      choicesList.shuffle();//shuffle
 
       answerList.add(Answer(
         name: countryList[random1].name,
