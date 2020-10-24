@@ -50,12 +50,12 @@ class _FlagGameState extends State<FlagGame> {
       int num = 0;
       List<String> choicesList = [countryList[random1].name];
 
-      int i = 1;
-      while (i < 4) {
+      int w = 1;
+      while (w < 4) {
         num = random.nextInt(countryList.length);
         if (choicesList.contains(countryList[num].name)) continue;
         choicesList.add(countryList[num].name);
-        i++;
+        w++;
       }
 
       choicesList.shuffle();
@@ -126,9 +126,11 @@ class _FlagGameState extends State<FlagGame> {
                 child: isLoading
                     ? CircularProgressIndicator()
                     : ListView.builder(
+
                         scrollDirection: Axis.horizontal,
                         itemCount: answerList.length,
                         itemBuilder: (context, index) {
+                          print(answerList[index].name);
                           return Container(
                             padding: const EdgeInsets.only(left: 16, right: 16),
                             child: Column(
@@ -276,6 +278,7 @@ class _FlagGameState extends State<FlagGame> {
                                         ),
                                       ),
                                       Container(
+
                                           padding: EdgeInsets.only(
                                               left: 16,
                                               right: 16,
@@ -403,7 +406,8 @@ class _FlagGameState extends State<FlagGame> {
                       ),
                     ],
                   ),
-                )
+                ),
+
               ],
             ),
           ),
