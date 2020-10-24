@@ -74,6 +74,7 @@ class _HomeState extends State<Home> {
                     ),
                   ),
                 ),
+
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: RaisedButton(padding: EdgeInsets.fromLTRB(16, 6, 16, 6),
