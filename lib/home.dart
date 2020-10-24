@@ -67,7 +67,7 @@ class _HomeState extends State<Home> {
                             textWithRadio(10),
                             textWithRadio(15),
                             textWithRadio(25),
-                            textWithRadio(200)
+                            textWithRadio(50)
                           ],
                         )
                       ],

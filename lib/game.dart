@@ -26,6 +26,7 @@ class _FlagGameState extends State<FlagGame> {
   int totalSuccess = 0;
   int totalFailed = 0;
   int totalNotAnswered;
+  List<String> tempList = [""];
 
   var isLoading = true;
 
@@ -44,9 +45,11 @@ class _FlagGameState extends State<FlagGame> {
 
   void fillQuizList(List<Country> countryList, List<Answer> answerList) {
     Random random = new Random();
-
-    for (int i = 0; i < widget.length; i++) {
+    int i = 0;
+    while (i < widget.length) {
       int random1 = random.nextInt(countryList.length);
+      if (tempList.contains(countryList[random1].name)) continue;
+      tempList.add(countryList[random1].name);
       int num = 0;
       List<String> choicesList = [countryList[random1].name];
 
@@ -67,6 +70,8 @@ class _FlagGameState extends State<FlagGame> {
         region: countryList[random1].region,
         choices: choicesList,
       ));
+
+      i++;
     }
   }
 
@@ -91,6 +96,7 @@ class _FlagGameState extends State<FlagGame> {
     // TODO: implement initState
     super.initState();
     totalNotAnswered = widget.length;
+
     getCountryListData().then((value) => fillQuizList(value, answerList));
   }
 
@@ -126,7 +132,6 @@ class _FlagGameState extends State<FlagGame> {
                 child: isLoading
                     ? CircularProgressIndicator()
                     : ListView.builder(
-
                         scrollDirection: Axis.horizontal,
                         itemCount: answerList.length,
                         itemBuilder: (context, index) {
@@ -278,7 +283,6 @@ class _FlagGameState extends State<FlagGame> {
                                         ),
                                       ),
                                       Container(
-
                                           padding: EdgeInsets.only(
                                               left: 16,
                                               right: 16,
@@ -382,7 +386,8 @@ class _FlagGameState extends State<FlagGame> {
                     children: [
                       Icon(
                         Icons.hourglass_empty,
-                        color: Colors.orange,size: 22,
+                        color: Colors.orange,
+                        size: 22,
                       ),
                       Text(
                         "Total Not Answered: " + totalNotAnswered.toString(),
@@ -407,7 +412,6 @@ class _FlagGameState extends State<FlagGame> {
                     ],
                   ),
                 ),
-
               ],
             ),
           ),
