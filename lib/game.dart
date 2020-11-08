@@ -68,7 +68,7 @@ class _FlagGameState extends State<FlagGame> {
         capital: countryList[random1].capital,
         flagUrl: countryList[random1].flagUrl,
         region: countryList[random1].region,
-        choices: choicesList,
+        choices: choicesList, //0
       ));
 
       i++;
