@@ -1,4 +1,4 @@
-# flag_quiz
+# Flutter Flag Quiz
 
 ***********************************************************************************
 ****** new Flutter application for testing information about National Flag..*******
