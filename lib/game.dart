@@ -1,11 +1,9 @@
-import 'dart:convert';
 import 'dart:math';
-
+import 'package:flag_quiz/API/server.dart';
 import 'country/country.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:http/http.dart' as http;
+
 
 import 'colors.dart';
 
@@ -30,12 +28,10 @@ class _FlagGameState extends State<FlagGame> {
 
   var isLoading = true;
 
-  Future getCountryListData() async {
-    String url = "https://restcountries.eu/rest/v2/all";
-    var response = await http.get(url);
+   getCountryListData() async {
+     FlagServer  _flagServer = FlagServer();
 
-    var body = json.decode(response.body) as List;
-    countryList = body.map((json) => Country.fromJson(json)).toList();
+     countryList = await _flagServer.getData();
     setState(() {
       isLoading = false;
     });
@@ -135,7 +131,7 @@ class _FlagGameState extends State<FlagGame> {
                         scrollDirection: Axis.horizontal,
                         itemCount: answerList.length,
                         itemBuilder: (context, index) {
-                          print(answerList[index].name);
+
                           return Container(
                             padding: const EdgeInsets.only(left: 16, right: 16),
                             child: Column(
