@@ -19,8 +19,10 @@ class _CountryCardState extends State<CountryCard> {
   Widget build(BuildContext context) {
     return Container(
         child: Card(
+      elevation: 4,
+      shadowColor: myColorListPrimary[0],
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(32),
+        borderRadius: BorderRadius.circular(16),
       ),
       child: Container(
         padding: const EdgeInsets.all(8.0),
